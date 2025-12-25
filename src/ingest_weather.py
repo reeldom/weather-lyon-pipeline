@@ -1,24 +1,22 @@
+"""
+Ingestion des données météo horaires pour la ville de Lyon
+depuis l'API Open-Meteo.
+
+- Récupère les dernières 48h
+- Transforme la réponse JSON en format tabulaire
+- Filtre les données futures
+- Prépare les données pour un stockage RAW
+"""
+
+
 import requests
 import pandas as pd
 from datetime import datetime, timezone
+from config import CITY, LAT, LON, OPEN_METEO_URL, OPEN_METEO_PARAMS
 
-
-url = "https://api.open-meteo.com/v1/forecast"
-
-CITY = "Lyon"
-LAT = 45.7485
-LON = 4.8467
-
-PARAMS = {
-    "latitude" : LAT,
-    "longitude" : LON,
-    "hourly" : "temperature_2m,precipitation,wind_speed_10m",
-    "past_days" : 2,
-    "timezone" : "UTC"
-}
 
 def main():
-    r = requests.get(url, params=PARAMS)
+    r = requests.get(OPEN_METEO_URL, params=OPEN_METEO_PARAMS)
     r.raise_for_status()
     data = r.json()
     
