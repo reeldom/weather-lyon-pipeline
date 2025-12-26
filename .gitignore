@@ -1,5 +1,14 @@
+# === Python environments ===
 .venv/
-__pycache__/
-*.pyc
-.cache/
 .env
+
+# === Python cache / bytecode ===
+__pycache__/
+*.py[cod]
+.cache/
+
+# === Jupyter ===
+.ipynb_checkpoints/
+
+# === OS ===
+.DS_Store

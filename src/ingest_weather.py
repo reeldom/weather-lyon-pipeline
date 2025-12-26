@@ -12,10 +12,11 @@ depuis l'API Open-Meteo.
 import requests
 import pandas as pd
 from datetime import datetime, timezone
+
 from config import CITY, LAT, LON, OPEN_METEO_URL, OPEN_METEO_PARAMS
 
 
-def main():
+def fetch_hourly_observed() -> pd.DataFrame:
     r = requests.get(OPEN_METEO_URL, params=OPEN_METEO_PARAMS)
     r.raise_for_status()
     data = r.json()
@@ -25,7 +26,7 @@ def main():
         'ts_utc': pd.to_datetime(hourly['time'], utc=True),
         'temperature_c': hourly['temperature_2m'],
         'precipitation_mm': hourly['precipitation'],
-        'wind_speed_10m': hourly['wind_speed_10m']
+        'wind_speed_kmh': hourly['wind_speed_10m']
     })
 
     # Filtre: on garde uniquement l'observé (pas le futur)
@@ -38,8 +39,14 @@ def main():
     df["longitude"] = LON
     df["ingested_at_utc"] = now_utc
 
-    print("Rows after filtering future:", len(df))
+    return df
+
+
+def main() -> None:
+    df = fetch_hourly_observed()
+    print("Rows: ", len(df))
     print(df.tail(5))
+
 
 if __name__ == "__main__":
     main()
