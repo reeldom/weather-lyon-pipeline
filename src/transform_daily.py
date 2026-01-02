@@ -36,6 +36,8 @@ def build_weather_daily(df_hourly_raw: pd.DataFrame) -> pd.DataFrame:
     agg = (
         df.groupby(["city", "date_local"], as_index=False)
         .agg(
+            latitude=("latitude", "first"),
+            longitude=("longitude", "first"),
             avg_temperature_c=("temperature_c", "mean"),
             min_temperature_c=("temperature_c", "min"),
             max_temperature_c=("temperature_c", "max"),

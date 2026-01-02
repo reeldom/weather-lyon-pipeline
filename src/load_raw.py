@@ -18,9 +18,9 @@ DO UPDATE SET
 
 def main():
     df = fetch_hourly_observed()
-
-    conn = get_conn()
+    conn = None
     try:
+        conn = get_conn()
         with conn.cursor() as cur:
             for _, row in df.iterrows():
                 cur.execute(
@@ -39,7 +39,9 @@ def main():
         conn.commit()
         print(f"Upserted {len(df)} rows into raw.weather_hourly")
     finally:
-        conn.close()
+        if conn is not None:
+            conn.close()
+
 
 if __name__ == "__main__":
     main()
